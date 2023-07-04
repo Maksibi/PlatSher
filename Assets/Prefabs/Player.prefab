@@ -195,8 +195,9 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  ledgeCheck: {fileID: 1197916417}
   _boxCollider: {fileID: 1779492047605048328}
+  ledgeCheck: {fileID: 1197916417}
+  wallCheck: {fileID: 494966846166582505}
 --- !u!1 &1779492047605048330
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,6 +267,7 @@ GameObject:
   - component: {fileID: 1779492047780099880}
   - component: {fileID: 1779492047780099884}
   - component: {fileID: 1779492047780099885}
+  - component: {fileID: 7948409875596898937}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -304,11 +306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e02783b28c658b642bdf4f36d61337c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  jumpForce: 5
-  slideMultiplier: 1
-  rollLength: 0.75
-  rollVelocityMultiplier: 1.5
+  stats: {fileID: 11400000, guid: 136b378698fcedb428ca9361281ea2bc, type: 2}
   wallJumpDir: {x: 15, y: 5}
 --- !u!50 &1779492047780099885
 Rigidbody2D:
@@ -331,6 +329,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &7948409875596898937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779492047780099883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fa04fe831dfaf842af8ae79a3499b0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 11400000, guid: 136b378698fcedb428ca9361281ea2bc, type: 2}
 --- !u!1 &1779492048283711102
 GameObject:
   m_ObjectHideFlags: 0

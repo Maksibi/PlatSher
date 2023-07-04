@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator RollCoroutine()
     {
         isRolling = true;
-        yield return new WaitForSeconds(rollLength);
+        yield return new WaitForSeconds(stats.rollLength);
         isRolling = false;
     }
 
@@ -15,18 +15,13 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
 
-    [Header("Movement stats")]
-    [SerializeField] private float speed = 5;
-    [SerializeField] private float jumpForce = 12;
-    [SerializeField] private float slideMultiplier = 0.2f;
-
-    [Header("Roll stats")]
-    [SerializeField] private float rollLength = 0.75f;
-    [SerializeField] private float rollVelocityMultiplier = 1.5f;
+    [SerializeField] private PlayerStats stats;
+    private float slideVelocity;
 
     private bool canDoubleJump;
     private bool isGrounded, isLeftWallDetected, isRightWallDetected, isLeftLedgeDetected,
         isRightLedgeDetected, isWallSliding, canWallSlide, isMoving, isRolling, canClimb, isClimbing;
+    public bool IsMoving => IsMoving;
 
     private bool canWallJump = true;
     private bool canMove = true;
@@ -41,6 +36,8 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
         sprite = GetComponentInChildren<SpriteRenderer>();
+
+        slideVelocity = stats.slideMultiplier;
     }
 
     private void Update()
@@ -71,9 +68,9 @@ public class PlayerMovement : MonoBehaviour
         {
             isWallSliding = true;
             isRolling = false;
-            slideMultiplier = (Input.GetAxis("Vertical") < 0) ? 0.9f : 0.3f;
+            slideVelocity = (Input.GetAxis("Vertical") < 0) ? 0.9f : 0.3f;
 
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * slideMultiplier);
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * slideVelocity);
         }
         else
         {
@@ -98,8 +95,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
-        if (isRolling) rb.velocity = new Vector2(facingDir * speed * rollVelocityMultiplier, rb.velocity.y);
+        rb.velocity = new Vector2(moveInput * stats.speed, rb.velocity.y);
+        if (isRolling) rb.velocity = new Vector2(facingDir * stats.speed * stats.rollVelocityMultiplier, rb.velocity.y);
         if (isClimbing) rb.velocity = new Vector2(0, 0);
     }
 
@@ -107,13 +104,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isWallSliding && canWallJump && facingDir == moveInput) WallJump();
 
-        else if (isGrounded) rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        else if (isGrounded) rb.velocity = new Vector2(rb.velocity.x, stats.jumpForce);
 
         else if (canDoubleJump && !isWallSliding)
         {
             canMove = true;
             canDoubleJump = false;
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.velocity = new Vector2(rb.velocity.x, stats.jumpForce);
         }
         canWallSlide = false;
         isRolling = false;
@@ -121,10 +118,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Climb()
     {
-        if (isLeftLedgeDetected || isRightLedgeDetected && canClimb)
-        {
-            isClimbing = true;
-        }
+        //if (isLeftLedgeDetected || isRightLedgeDetected && canClimb)
+        //{
+            //isClimbing = true;
+        //}
     }
 
     private void Roll()
@@ -139,7 +136,9 @@ public class PlayerMovement : MonoBehaviour
     {
         canMove = false;
 
-        Vector2 dir = new Vector2(wallJumpDir.x * -facingDir, wallJumpDir.y);
+        Vector2 dir = new Vector2(wallJumpDir.x * facingDir, wallJumpDir.y);
+
+        Debug.Log("WALLJUMP         " + dir);
 
         rb.AddForce(dir, ForceMode2D.Impulse);
     }
@@ -194,7 +193,7 @@ public class PlayerMovement : MonoBehaviour
         isRightWallDetected = v;
     }
 
-    public void OnLeftWallLedge(bool v)
+    /*public void OnLeftWallLedge(bool v)
     {
         isLeftLedgeDetected = v;
     }
@@ -202,7 +201,7 @@ public class PlayerMovement : MonoBehaviour
     public void OnRightWallLedge(bool v)
     {
         isRightLedgeDetected = v;
-    }
+    }*/
     #endregion
 }
 

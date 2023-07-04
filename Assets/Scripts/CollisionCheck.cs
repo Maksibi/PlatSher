@@ -27,8 +27,8 @@ public class CollisionCheck : MonoBehaviour
         _playerController.SetGroundedState(isGrounded);
         _playerController.OnLeftSideWallTouch(isTouchingLeftWall);
         _playerController.OnRightSideWallTouch(isTouchingRightWall);
-        _playerController.OnLeftWallLedge(ledgeLeftWall);
-        _playerController.OnRightWallLedge(ledgeRightWall);
+        //_playerController.OnLeftWallLedge(ledgeLeftWall);
+        //_playerController.OnRightWallLedge(ledgeRightWall);
     }
 
     private void FixedUpdate()
