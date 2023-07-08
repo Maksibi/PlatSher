@@ -4,47 +4,65 @@ using UnityEngine;
 
 namespace Player
 {
-    public class PlayerCombat : MonoBehaviour
+    public class PlayerCombat : Entity
     {
-        IEnumerator HeavyAttackCoroutine()
-        {
-            anim.SetTrigger("HeavyAttack");
-            yield return new WaitForSeconds(stats.rollLength);
-            anim.ResetTrigger("HeavyAttack");
-        }
-
         [SerializeField] private PlayerStats stats;
 
         private PlayerMovement movement;
-        private Animator anim;
+
         private bool isInvincible = false;
 
-        private void Start()
+        private bool isAttacking;
+        private int comboCounter;
+
+        protected override void Start()
         {
+            base.Start();
+
             anim = GetComponentInChildren<Animator>();
             movement = GetComponent<PlayerMovement>();
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
+
             CheckInput();
+            AnimatorControl();
         }
 
         private void CheckInput()
         {
             if (Input.GetMouseButtonDown(0)) FastAttack();
-            if (Input.GetMouseButtonDown(1)) PowerAttack();
+           // if (Input.GetMouseButtonDown(1)) PowerAttack();
         }
 
-        private void PowerAttack()
-        {
-            if(movement.IsMoving)
-            StartCoroutine(HeavyAttackCoroutine());
-        }
+        //private void PowerAttack()
+        //{
+           // if(movement.IsMoving)
+            //StartCoroutine(HeavyAttackCoroutine());
+        //}
 
         private void FastAttack()
         {
-            throw new NotImplementedException();
+            //if (!movement.IsMoving && !movement.IsRolling)
+            {
+                isAttacking = true;
+            }
+        }
+
+        private void AnimatorControl()
+        {
+            anim.SetBool("isAttacking", isAttacking);
+            anim.SetInteger("comboCounter", comboCounter);
+        }
+
+        public void AttackOver()
+        {
+            isAttacking = false;
+            comboCounter++;
+
+            if (comboCounter > 2) comboCounter = 0;
         }
     }
 }

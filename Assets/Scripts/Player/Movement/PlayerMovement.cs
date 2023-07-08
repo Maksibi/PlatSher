@@ -2,46 +2,45 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : Entity
 {
-    IEnumerator RollCoroutine()
-    {
-        isRolling = true;
-        yield return new WaitForSeconds(stats.rollLength);
-        isRolling = false;
-    }
-
-    private Animator anim;
-    private Rigidbody2D rb;
-    private SpriteRenderer sprite;
 
     [SerializeField] private PlayerStats stats;
+
+    private Rigidbody2D rb;
+
     private float slideVelocity;
+    private float rollTime;
 
     private bool canDoubleJump;
-    private bool isGrounded, isLeftWallDetected, isRightWallDetected, isLeftLedgeDetected,
-        isRightLedgeDetected, isWallSliding, canWallSlide, isMoving, isRolling, canClimb, isClimbing;
+    private bool  isLeftLedgeDetected, isRightLedgeDetected, isWallSliding,
+        canWallSlide, isMoving, isRolling, canClimb, isClimbing;
+
     public bool IsMoving => IsMoving;
+    public bool IsRolling => IsRolling;
 
     private bool canWallJump = true;
     private bool canMove = true;
 
     private float moveInput;
 
-    private int facingDir = 1;
+    
     [SerializeField] private Vector2 wallJumpDir;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponentInChildren<Animator>();
-        sprite = GetComponentInChildren<SpriteRenderer>();
 
         slideVelocity = stats.slideMultiplier;
+        rollTime = stats.rollLength;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         CheckInput();
         FlipControl();
         AnimatorControl();
@@ -51,6 +50,9 @@ public class PlayerMovement : MonoBehaviour
             canWallSlide = true;
         }
         else canWallSlide = false;
+
+        rollTime -= Time.deltaTime;
+        if(rollTime < 0) isRolling = false;
     }
 
     private void FixedUpdate()
@@ -128,7 +130,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isWallSliding & canMove & isMoving)
         {
-            StartCoroutine(RollCoroutine());
+            rollTime = stats.rollLength;
+
+            if (rollTime > 0)
+            {
+                isRolling = true;
+            }
+            else isRolling = false;
         }
     }
 
@@ -141,12 +149,6 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log("WALLJUMP         " + dir);
 
         rb.AddForce(dir, ForceMode2D.Impulse);
-    }
-
-    private void Flip(bool v)
-    {
-        facingDir = v ? 1 : -1;
-        sprite.flipX = !v;
     }
 
     private void FlipControl()
@@ -178,20 +180,6 @@ public class PlayerMovement : MonoBehaviour
         anim.SetBool("isClimbing", isClimbing);
     }
     #region Public API
-    public void SetGroundedState(bool v)
-    {
-        isGrounded = v;
-    }
-
-    public void OnLeftSideWallTouch(bool v)
-    {
-        isLeftWallDetected = v;
-    }
-
-    public void OnRightSideWallTouch(bool v)
-    {
-        isRightWallDetected = v;
-    }
 
     /*public void OnLeftWallLedge(bool v)
     {
