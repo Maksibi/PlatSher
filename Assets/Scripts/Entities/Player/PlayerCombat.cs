@@ -6,7 +6,7 @@ namespace Player
 {
     public class PlayerCombat : Entity
     {
-        [SerializeField] private PlayerStats stats;
+        [SerializeField] private EntityStats stats;
 
         private PlayerMovement movement;
 

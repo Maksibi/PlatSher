@@ -6,6 +6,7 @@ public class Entity : MonoBehaviour
 {
     protected Animator anim;
     protected SpriteRenderer sprite;
+    protected Rigidbody2D rb;
 
     protected bool isGrounded, isLeftWallDetected, isRightWallDetected;
 
@@ -15,6 +16,7 @@ public class Entity : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
         sprite = GetComponentInChildren<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     protected virtual void Update()

@@ -5,9 +5,10 @@ using UnityEngine;
 #endif
 public class CollisionCheck : MonoBehaviour
 {
+    [Header ("Collision")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private CapsuleCollider2D _capsuleCollider;
-    [SerializeField] private Transform ledgeCheck, wallCheck;
+    [SerializeField] private Transform ledgeCheck, wallCheck, groundCheck;
     [SerializeField] private float groundCheckDistance;
 
     private Entity _controller = null;
@@ -44,10 +45,10 @@ public class CollisionCheck : MonoBehaviour
 
     private bool CheckGrounded()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down,
+        RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down,
             groundCheckDistance, groundLayer);
 
-        Debug.DrawRay(transform.position, Vector2.down * groundCheckDistance, Color.red);
+        Debug.DrawRay(groundCheck.position, Vector2.down * groundCheckDistance, Color.red);
 
         return hit.collider != null;
     }
@@ -70,6 +71,17 @@ public class CollisionCheck : MonoBehaviour
 
         Debug.DrawRay(ledgeCheck.position, direction * (_capsuleCollider.bounds.extents.x + widthOffset), Color.green);
         return hit.collider != null;
+    }
+
+    private void OnDrawGizmos()
+    {
+        float widthOffset = 0.03f;
+
+        Debug.DrawRay(groundCheck.position, Vector2.down * groundCheckDistance, Color.red);
+        Debug.DrawRay(wallCheck.position, Vector2.left * (_capsuleCollider.bounds.extents.x + widthOffset), Color.red);
+        Debug.DrawRay(wallCheck.position, Vector2.right * (_capsuleCollider.bounds.extents.x + widthOffset), Color.red);
+        Debug.DrawRay(ledgeCheck.position, Vector2.left * (_capsuleCollider.bounds.extents.x + widthOffset), Color.green);
+        Debug.DrawRay(ledgeCheck.position, Vector2.right * (_capsuleCollider.bounds.extents.x + widthOffset), Color.green);
     }
 }
 

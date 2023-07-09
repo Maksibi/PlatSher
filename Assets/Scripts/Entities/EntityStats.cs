@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu]
-public class PlayerStats : ScriptableObject
+public class EntityStats : ScriptableObject
 {
     [field: Header("Movement stats")]
     [field: SerializeField] public float speed{get; private set;} = 5;

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f01a95e4cdc6a9340a23dc766715f645, type: 3}
-  m_Name: Player Stats
+  m_Name: Skeleton Stats
   m_EditorClassIdentifier: 
-  <speed>k__BackingField: 7
-  <jumpForce>k__BackingField: 5
-  <slideMultiplier>k__BackingField: 0.9
-  <rollLength>k__BackingField: 0.75
-  <rollVelocityMultiplier>k__BackingField: 1.5
+  <speed>k__BackingField: 2
+  <jumpForce>k__BackingField: 2
+  <slideMultiplier>k__BackingField: 1
+  <rollLength>k__BackingField: 0
+  <rollVelocityMultiplier>k__BackingField: 0
   <damage>k__BackingField: 0
   <health>k__BackingField: 0

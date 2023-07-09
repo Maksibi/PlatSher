@@ -4,10 +4,7 @@ using System;
 
 public class PlayerMovement : Entity
 {
-
-    [SerializeField] private PlayerStats stats;
-
-    private Rigidbody2D rb;
+    [SerializeField] private EntityStats stats;
 
     private float slideVelocity;
     private float rollTime;
@@ -24,14 +21,12 @@ public class PlayerMovement : Entity
 
     private float moveInput;
 
-    
+ 
     [SerializeField] private Vector2 wallJumpDir;
 
     protected override void Start()
     {
         base.Start();
-
-        rb = GetComponent<Rigidbody2D>();
 
         slideVelocity = stats.slideMultiplier;
         rollTime = stats.rollLength;
