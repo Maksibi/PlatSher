@@ -151,6 +151,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 3b06cb51c1884394196bcc37afa4aca5, type: 2}
   groundCheck: {fileID: 3451755028026789310}
+  playerDetection: {fileID: 3451755026838604498}
+  playerDetectionDistance: 4
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!50 &3451755027564674604
 Rigidbody2D:
   serializedVersion: 4

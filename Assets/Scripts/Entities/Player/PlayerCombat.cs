@@ -4,31 +4,24 @@ using UnityEngine;
 
 namespace Player
 {
-    public class PlayerCombat : Entity
+    public class PlayerCombat : MonoBehaviour
     {
-        [SerializeField] private EntityStats stats;
+        private EntityStats stats;
 
         private PlayerMovement movement;
 
         private bool isInvincible = false;
 
         private bool isAttacking;
+        public bool IsAttacking => isAttacking;
+
         private int comboCounter;
+        public int ComboCounter => comboCounter;
 
-        protected override void Start()
+
+        protected void Update()
         {
-            base.Start();
-
-            anim = GetComponentInChildren<Animator>();
-            movement = GetComponent<PlayerMovement>();
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-
             CheckInput();
-            AnimatorControl();
         }
 
         private void CheckInput()
@@ -51,18 +44,18 @@ namespace Player
             }
         }
 
-        private void AnimatorControl()
-        {
-            anim.SetBool("isAttacking", isAttacking);
-            anim.SetInteger("comboCounter", comboCounter);
-        }
-
         public void AttackOver()
         {
             isAttacking = false;
             comboCounter++;
 
             if (comboCounter > 2) comboCounter = 0;
+        }
+
+        public void Init(PlayerMovement movement, EntityStats stats)
+        {
+            this.movement = movement;
+            this.stats = stats;
         }
     }
 }

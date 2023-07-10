@@ -1,10 +1,13 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using Player;
 
-public class PlayerMovement : Entity
+public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private EntityStats stats;
+    private EntityStats stats;
+
+    private PlayerController controller;
 
     private float slideVelocity;
     private float rollTime;
@@ -13,8 +16,10 @@ public class PlayerMovement : Entity
     private bool  isLeftLedgeDetected, isRightLedgeDetected, isWallSliding,
         canWallSlide, isMoving, isRolling, canClimb, isClimbing;
 
-    public bool IsMoving => IsMoving;
-    public bool IsRolling => IsRolling;
+    public bool IsWallSliding => isWallSliding;
+    public bool IsMoving => isMoving;
+    public bool IsRolling => isRolling;
+    
 
     private bool canWallJump = true;
     private bool canMove = true;
@@ -24,23 +29,17 @@ public class PlayerMovement : Entity
  
     [SerializeField] private Vector2 wallJumpDir;
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
-
         slideVelocity = stats.slideMultiplier;
         rollTime = stats.rollLength;
     }
 
-    protected override void Update()
+    protected void Update()
     {
-        base.Update();
-
         CheckInput();
-        FlipControl();
-        AnimatorControl();
 
-        if (!isGrounded && rb.velocity.y < 0)
+        if (!controller.IsGrounded && controller.Rigid.velocity.y < 0)
         {
             canWallSlide = true;
         }
@@ -52,22 +51,22 @@ public class PlayerMovement : Entity
 
     private void FixedUpdate()
     {
-        isMoving = rb.velocity.x != 0;
+        isMoving = controller.Rigid.velocity.x != 0;
 
-        if (isGrounded)
+        if (controller.IsGrounded)
         {
             canMove = true;
             canDoubleJump = true;
             isClimbing = false;
         }
 
-        if ((isLeftWallDetected || isRightWallDetected) && canWallSlide && !isGrounded)
+        if ((controller.IsLeftWallDetected || controller.IsRightWallDetected) && canWallSlide && !controller.IsGrounded)
         {
             isWallSliding = true;
             isRolling = false;
             slideVelocity = (Input.GetAxis("Vertical") < 0) ? 0.9f : 0.3f;
 
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * slideVelocity);
+            controller.Rigid.velocity = new Vector2(controller.Rigid.velocity.x, controller.Rigid.velocity.y * slideVelocity);
         }
         else
         {
@@ -77,7 +76,7 @@ public class PlayerMovement : Entity
 
         if (isWallSliding) canDoubleJump = true;
     }
-
+    #region Private API
     private void CheckInput()
     {
         if (isRolling) return;
@@ -92,22 +91,24 @@ public class PlayerMovement : Entity
 
     private void Move()
     {
-        rb.velocity = new Vector2(moveInput * stats.speed, rb.velocity.y);
-        if (isRolling) rb.velocity = new Vector2(facingDir * stats.speed * stats.rollVelocityMultiplier, rb.velocity.y);
-        if (isClimbing) rb.velocity = new Vector2(0, 0);
+        controller.Rigid.velocity = new Vector2(moveInput * stats.speed, controller.Rigid.velocity.y);
+        if (isRolling) controller.Rigid.velocity = new Vector2(controller.FacingDir * stats.speed * stats.rollVelocityMultiplier, 
+            controller.Rigid.velocity.y);
+
+        if (isClimbing) controller.Rigid.velocity = new Vector2(0, 0);
     }
 
     private void Jump()
     {
-        if (isWallSliding && canWallJump && facingDir == moveInput) WallJump();
+        if (isWallSliding && canWallJump && controller.FacingDir == moveInput) WallJump();
 
-        else if (isGrounded) rb.velocity = new Vector2(rb.velocity.x, stats.jumpForce);
+        else if (controller.IsGrounded) controller.Rigid.velocity = new Vector2(controller.Rigid.velocity.x, stats.jumpForce);
 
         else if (canDoubleJump && !isWallSliding)
         {
             canMove = true;
             canDoubleJump = false;
-            rb.velocity = new Vector2(rb.velocity.x, stats.jumpForce);
+            controller.Rigid.velocity = new Vector2(controller.Rigid.velocity.x, stats.jumpForce);
         }
         canWallSlide = false;
         isRolling = false;
@@ -139,52 +140,21 @@ public class PlayerMovement : Entity
     {
         canMove = false;
 
-        Vector2 dir = new Vector2(wallJumpDir.x * facingDir, wallJumpDir.y);
+        Vector2 dir = new Vector2(wallJumpDir.x * controller.FacingDir, wallJumpDir.y);
 
         Debug.Log("WALLJUMP         " + dir);
 
-        rb.AddForce(dir, ForceMode2D.Impulse);
+        controller.Rigid.AddForce(dir, ForceMode2D.Impulse);
     }
 
-    private void FlipControl()
-    {
-        float xMotion = rb.velocity.x;
-
-        if (isWallSliding & isLeftWallDetected)
-        {
-            Flip(true);
-        }
-        else if (isWallSliding & isRightWallDetected)
-        {
-            Flip(false);
-        }
-        else
-        {
-            if (xMotion > 0.1f) Flip(true);
-            else if (xMotion < -0.1f) Flip(false);
-        }
-    }
-
-    private void AnimatorControl()
-    {
-        anim.SetBool("isGrounded", isGrounded);
-        anim.SetBool("IsMoving", isMoving);
-        anim.SetBool("isWallSliding", isWallSliding);
-        //anim.SetBool("isWallDetected", )
-        anim.SetBool("isRolling", isRolling);
-        anim.SetBool("isClimbing", isClimbing);
-    }
+    #endregion
     #region Public API
 
-    /*public void OnLeftWallLedge(bool v)
+    public void Init(PlayerController controller, EntityStats stats)
     {
-        isLeftLedgeDetected = v;
+        this.controller = controller;
+        this.stats = stats;
     }
-
-    public void OnRightWallLedge(bool v)
-    {
-        isRightLedgeDetected = v;
-    }*/
     #endregion
 }
 

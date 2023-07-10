@@ -8,11 +8,17 @@ public class Entity : MonoBehaviour
     protected SpriteRenderer sprite;
     protected Rigidbody2D rb;
 
+    public Rigidbody2D Rigid => rb;
+
     protected bool isGrounded, isLeftWallDetected, isRightWallDetected;
+    public bool IsGrounded => isGrounded;
+    public bool IsLeftWallDetected => isLeftWallDetected;
+    public bool IsRightWallDetected => isRightWallDetected;
 
     protected int facingDir = 1;
+    public int FacingDir => facingDir;
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         anim = GetComponentInChildren<Animator>();
         sprite = GetComponentInChildren<SpriteRenderer>();
