@@ -25,7 +25,7 @@ namespace Player
             movement = GetComponent<PlayerMovement>();
 
             combat.Init(movement, stats);
-            movement.Init(this, stats);
+            movement.Init(this, stats, combat);
             animator.Init(movement, combat, this);
             /*
             stateMachine = new PlayerStateMachine();

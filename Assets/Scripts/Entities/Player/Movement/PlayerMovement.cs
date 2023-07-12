@@ -8,10 +8,12 @@ public class PlayerMovement : MonoBehaviour
     private EntityStats stats;
 
     private PlayerController controller;
+    private PlayerCombat combat;
 
     private float slideVelocity;
     private float rollTime;
 
+    #region booleans
     private bool canDoubleJump;
     private bool  isLeftLedgeDetected, isRightLedgeDetected, isWallSliding,
         canWallSlide, isMoving, isRolling, canClimb, isClimbing;
@@ -19,11 +21,11 @@ public class PlayerMovement : MonoBehaviour
     public bool IsWallSliding => isWallSliding;
     public bool IsMoving => isMoving;
     public bool IsRolling => isRolling;
-    
+    public bool IsGrounded => controller.IsGrounded;
 
     private bool canWallJump = true;
     private bool canMove = true;
-
+    #endregion booleans
     private float moveInput;
 
  
@@ -47,6 +49,8 @@ public class PlayerMovement : MonoBehaviour
 
         rollTime -= Time.deltaTime;
         if(rollTime < 0) isRolling = false;
+
+        canMove = !combat.IsAttacking;
     }
 
     private void FixedUpdate()
@@ -82,6 +86,7 @@ public class PlayerMovement : MonoBehaviour
         if (isRolling) return;
 
         if (canMove) moveInput = Input.GetAxisRaw("Horizontal");
+        else moveInput = 0;
 
         if (Input.GetKeyDown(KeyCode.Space)) Jump();
         if (Input.GetKeyDown(KeyCode.Space)) Climb();
@@ -91,8 +96,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        controller.Rigid.velocity = new Vector2(moveInput * stats.speed, controller.Rigid.velocity.y);
-        if (isRolling) controller.Rigid.velocity = new Vector2(controller.FacingDir * stats.speed * stats.rollVelocityMultiplier, 
+        if (canMove) controller.Rigid.velocity = new Vector2(moveInput * stats.speed, controller.Rigid.velocity.y);
+        else if (isRolling) controller.Rigid.velocity = new Vector2(controller.FacingDir * stats.speed * stats.rollVelocityMultiplier, 
             controller.Rigid.velocity.y);
 
         if (isClimbing) controller.Rigid.velocity = new Vector2(0, 0);
@@ -150,10 +155,11 @@ public class PlayerMovement : MonoBehaviour
     #endregion
     #region Public API
 
-    public void Init(PlayerController controller, EntityStats stats)
+    public void Init(PlayerController controller, EntityStats stats, PlayerCombat combat)
     {
         this.controller = controller;
         this.stats = stats;
+        this.combat = combat;
     }
     #endregion
 }

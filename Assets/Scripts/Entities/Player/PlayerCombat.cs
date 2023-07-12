@@ -38,7 +38,7 @@ namespace Player
 
         private void FastAttack()
         {
-            //if (!movement.IsMoving && !movement.IsRolling)
+            if (!movement.IsMoving && !movement.IsRolling && movement.IsGrounded)
             {
                 isAttacking = true;
             }
