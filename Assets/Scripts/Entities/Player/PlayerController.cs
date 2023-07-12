@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Player
@@ -12,6 +10,12 @@ namespace Player
         private PlayerMovement movement;
         private AnimatorController animator;
 
+        ///
+        public PlayerStateMachine stateMachine { get; private set; }
+        public Idle idleState { get; private set; }
+        public Moving movingState { get; private set; }
+        ///
+
         protected override void Awake()
         {
             base.Awake();
@@ -19,13 +23,19 @@ namespace Player
             animator = GetComponentInChildren<AnimatorController>();
             combat = GetComponent<PlayerCombat>();
             movement = GetComponent<PlayerMovement>();
+
+            combat.Init(movement, stats);
+            movement.Init(this, stats);
+            animator.Init(movement, combat, this);
+            ///
+            stateMachine = new PlayerStateMachine();
+            idleState = new Idle(this, stateMachine, "Idle");
+            movingState = new Moving(this, stateMachine, "Moving");
         }
 
         protected void Start()
         {
-            combat.Init(movement, stats);
-            movement.Init(this, stats);
-            animator.Init(movement, combat, this);
+            stateMachine.Initialize(idleState);
         }
 
         protected override void Update()
@@ -33,6 +43,8 @@ namespace Player
             base.Update();
 
             FlipControl();
+
+            stateMachine.currentState.Update();
         }
 
         private void FlipControl()

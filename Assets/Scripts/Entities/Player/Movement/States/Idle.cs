@@ -2,38 +2,25 @@ using UnityEngine;
 
 namespace Player
 {
-    public class Idle : IPlayerMovementState
+    public class Idle : PlayerState
     {
-        private readonly MovementStateController controller;
+        public Idle(PlayerController _player, PlayerStateMachine _stateMachine, string _animBoolName) :
+            base(_player, _stateMachine, _animBoolName)
+        { }
 
-        public Idle(MovementStateController controller)
+        public override void Enter()
         {
-            this.controller = controller;
+            base.Enter();
         }
 
-        public void Act()
+        public override void Update()
         {
-            
+            base.Update();
         }
 
-        public void Close()
+        public override void Exit()
         {
-            
-        }
-
-        public void Initialize()
-        {
-            
-        }
-
-        public void Sense()
-        {
-            
-        }
-
-        public void Think()
-        {
-            
+            base.Exit();
         }
     }
 }
