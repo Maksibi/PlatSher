@@ -10,11 +10,11 @@ namespace Player
         private PlayerMovement movement;
         private AnimatorController animator;
 
-        ///
+        /*
         public PlayerStateMachine stateMachine { get; private set; }
         public Idle idleState { get; private set; }
         public Moving movingState { get; private set; }
-        ///
+        */
 
         protected override void Awake()
         {
@@ -27,15 +27,16 @@ namespace Player
             combat.Init(movement, stats);
             movement.Init(this, stats);
             animator.Init(movement, combat, this);
-            ///
+            /*
             stateMachine = new PlayerStateMachine();
             idleState = new Idle(this, stateMachine, "Idle");
             movingState = new Moving(this, stateMachine, "Moving");
+            */
         }
 
         protected void Start()
         {
-            stateMachine.Initialize(idleState);
+            //stateMachine.Initialize(idleState);
         }
 
         protected override void Update()
@@ -44,7 +45,7 @@ namespace Player
 
             FlipControl();
 
-            stateMachine.currentState.Update();
+            //stateMachine.currentState.Update();
         }
 
         private void FlipControl()
