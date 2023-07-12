@@ -31,6 +31,11 @@ namespace Player
             this.controller = controller;
         }
 
+        public void SetBool(string animBoolName, bool value)
+        {
+            animator.SetBool(animBoolName, value);
+        }
+
         private void AnimatorControl()
         {
             animator.SetBool("isGrounded", controller.IsGrounded);

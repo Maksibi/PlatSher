@@ -16,7 +16,10 @@ namespace Player
 
         public override void Update()
         {
-            base.Update();
+            player.SetVelocity(xInput, player.rb.velocity.y);
+
+            if(xInput == 0)
+                stateMachine.ChangeState(player.idleState);
         }
 
         public override void Exit()

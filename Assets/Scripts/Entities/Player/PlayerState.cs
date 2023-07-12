@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace Player
 {
@@ -8,7 +9,9 @@ namespace Player
     {
         protected PlayerStateMachine stateMachine;
         protected PlayerController player;
+        protected AnimatorController animator;
 
+        protected float xInput;
         private string animBoolName;
 
         public PlayerState(PlayerController _player, PlayerStateMachine _stateMachine, string animBoolName)
@@ -20,17 +23,18 @@ namespace Player
 
         public virtual void Enter()
         {
-            Debug.Log("Enter: " + animBoolName);
+            player.AnimatorSetBool(animBoolName, true);
         }
 
         public virtual void Update()
         {
+            xInput = Input.GetAxisRaw("Horizontal");
             Debug.Log("In: " + animBoolName);
         }
 
         public virtual void Exit()
         {
-            Debug.Log("Ended: " + animBoolName);
+            player.AnimatorSetBool(animBoolName, false);
         }
     }
 }

@@ -6,7 +6,7 @@ public class Entity : MonoBehaviour
 {
     protected Animator anim;
     protected SpriteRenderer sprite;
-    protected Rigidbody2D rb;
+    public Rigidbody2D rb;
 
     public Rigidbody2D Rigid => rb;
 
