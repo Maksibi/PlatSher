@@ -1291,8 +1291,8 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 56147726801708894, guid: 9046639158aee5a48815a3865a081bf1, type: 3}
-      propertyPath: moveSpeed
-      value: 8
+      propertyPath: jumpForce
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1779492047780099880, guid: 9046639158aee5a48815a3865a081bf1, type: 3}
       propertyPath: m_RootOrder
@@ -1341,10 +1341,6 @@ PrefabInstance:
     - target: {fileID: 1779492047780099883, guid: 9046639158aee5a48815a3865a081bf1, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 1779492047780099885, guid: 9046639158aee5a48815a3865a081bf1, type: 3}
-      propertyPath: m_Material
-      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9046639158aee5a48815a3865a081bf1, type: 3}
