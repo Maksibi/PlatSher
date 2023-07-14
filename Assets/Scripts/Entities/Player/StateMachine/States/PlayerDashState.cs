@@ -8,16 +8,23 @@ public class PlayerDashState : PlayerState
     {
         base.Enter();
 
-        player.SetVelocity(rb.velocity.x, player.jumpForce);
+        stateTimer = player.dashDuration;
     }
 
     public override void Exit()
     {
         base.Exit();
+
+        player.SetVelocity(0, rb.velocity.y);
     }
 
     public override void Update()
     {
         base.Update();
+
+        player.SetVelocity(player.dashSpeed * player.dashDir, rb.velocity.y);
+
+        if (stateTimer < 0)
+            stateMachine.ChangeState(player.idleState);
     }
 }

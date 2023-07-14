@@ -182,6 +182,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 8
   jumpForce: 5
+  dashSpeed: 25
+  dashDuration: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -189,6 +191,8 @@ MonoBehaviour:
   wallCheck: {fileID: 494966846166582505}
   groundCheckDistance: 0.11
   wallCheckDistance: 0.5
+  timer: 0
+  cooldown: 0
 --- !u!1 &1779492048283711102
 GameObject:
   m_ObjectHideFlags: 0

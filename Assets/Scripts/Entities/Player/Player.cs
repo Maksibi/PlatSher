@@ -6,6 +6,11 @@ public class Player : MonoBehaviour
     public float moveSpeed = 12;
     public float jumpForce = 12;
     [Space]
+    [Header("Dash info")]
+    public float dashSpeed;
+    public float dashDuration;
+    public float dashDir { get; private set; }
+    [Space]
     [Header("Collision")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
@@ -31,6 +36,7 @@ public class Player : MonoBehaviour
     public PlayerMoveState moveState { get; private set; }
     public PlayerJumpState jumpState { get; private set; }
     public PlayerAirState airState { get; private set; }
+    public PlayerDashState dashState { get; private set; }
     #endregion States
 
     #region Unity API
@@ -42,6 +48,7 @@ public class Player : MonoBehaviour
         moveState = new PlayerMoveState(stateMachine, this, "Move");
         jumpState = new PlayerJumpState(stateMachine, this, "Jump");
         airState = new PlayerAirState(stateMachine, this, "Jump");
+        dashState = new PlayerDashState(stateMachine, this, "Dash");
     }
 
     private void Start()
@@ -55,6 +62,7 @@ public class Player : MonoBehaviour
     private void Update()
     {
         stateMachine.currentState.Update();
+        CheckInputForDash();
     }
 
     private void OnDrawGizmos()
@@ -63,6 +71,19 @@ public class Player : MonoBehaviour
         Gizmos.DrawLine(wallCheck.position, new Vector2(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
     }
     #endregion Unity API
+
+    private void CheckInputForDash()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            dashDir = Input.GetAxisRaw("Horizontal");
+            if(dashDir == 0)
+                dashDir = facingDir;
+
+
+            stateMachine.ChangeState(dashState);
+        }
+    }
 
     public bool IsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
 
