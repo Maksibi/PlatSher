@@ -55,7 +55,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1779492047178965891}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.4, y: -1.25, z: 0}
+  m_LocalPosition: {x: 0, y: -1.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -88,7 +88,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1779492047605048330}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.4, y: -0.3, z: 0}
+  m_LocalPosition: {x: 0, y: -0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -104,7 +104,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 1779492047605048330}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2c591c8d02bea5b46820e8d4754f8be2, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -180,19 +180,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d35aba589599c143a6a8f0576044e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackMovement:
+  - {x: 3, y: 2}
+  - {x: 1, y: 3}
+  - {x: 4, y: 2}
   moveSpeed: 8
   jumpForce: 5
   dashSpeed: 25
   dashDuration: 0.2
+  dashCooldown: 1
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   groundCheck: {fileID: 1779492047178965888}
   wallCheck: {fileID: 494966846166582505}
   groundCheckDistance: 0.11
-  wallCheckDistance: 0.5
-  timer: 0
-  cooldown: 0
+  wallCheckDistance: 0.39
 --- !u!1 &1779492048283711102
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,6 +207,7 @@ GameObject:
   - component: {fileID: 1779492048283711103}
   - component: {fileID: 1779492048283711100}
   - component: {fileID: 1779492048283711101}
+  - component: {fileID: 1088191884}
   m_Layer: 8
   m_Name: View
   m_TagString: Untagged
@@ -219,7 +223,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1779492048283711102}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.4, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -298,3 +302,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1088191884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779492048283711102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80cc4f30888b4aa4f90d011533454f63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

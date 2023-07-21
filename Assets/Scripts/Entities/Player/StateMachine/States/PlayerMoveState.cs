@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerMoveState : PlayerGroundedState
 {
     public PlayerMoveState(PlayerStateMachine _stateMachine, Player _player, string _animBoolName) :
@@ -20,7 +16,7 @@ public class PlayerMoveState : PlayerGroundedState
 
         player.SetVelocity(xInput * player.moveSpeed, rb.velocity.y);
 
-        if (xInput == 0)
+        if (xInput == 0 || player.IsWallDetected())
             stateMachine.ChangeState(player.idleState);
     }
 
