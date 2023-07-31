@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class PlayerPrimaryAttackState : PlayerState
@@ -17,6 +18,8 @@ public class PlayerPrimaryAttackState : PlayerState
     {
         base.Enter();
 
+        xInput = 0;
+
         if (comboCounter > 2 || Time.time >= lastTimeAttacked + comboWindow)
             comboCounter = 0;
 
@@ -24,11 +27,14 @@ public class PlayerPrimaryAttackState : PlayerState
 
         float attackDir = player.facingDir;
 
-        if(xInput != 0)
+        if (xInput != 0)
             attackDir = xInput;
 
         player.SetVelocity(player.attackMovement[comboCounter].x * attackDir,
             player.attackMovement[comboCounter].y);
+
+        Debug.Log("xinput = " + xInput);
+        Debug.Log("attackDir = " +attackDir);
 
         stateTimer = 0.1f;
     }
@@ -51,6 +57,6 @@ public class PlayerPrimaryAttackState : PlayerState
             stateMachine.ChangeState(player.idleState);
 
         if (stateTimer < 0)
-            player.ZeroVelocity();
+            player.SetZeroVelocity();
     }
 }

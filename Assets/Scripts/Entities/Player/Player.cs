@@ -1,11 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : Entity
 {
     #region Fields
     [Header("Combat")]
     public Vector2[] attackMovement;
+    public float counterAttackDuration = 0.2f;
     [Space]
     [Header("Move info")]
     public float moveSpeed = 12;
@@ -15,28 +16,14 @@ public class Player : MonoBehaviour
     public float dashSpeed;
     public float dashDuration;
     public float dashDir { get; private set; }
-    
-    private float dashUsageTimer;
-    [SerializeField] private float dashCooldown;
-    
-    [Space]
-    [Header("Collision")]
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private Transform wallCheck;
-    [SerializeField] private float groundCheckDistance;
-    [SerializeField] private float wallCheckDistance;
+    [Header("Components")]
+    [SerializeField] private SpriteRenderer SpriteRenderer;
+
     #endregion
-    public int facingDir { get; private set; } = 1;
+
     public bool isBusy { get; private set; }
-    private bool facingRight = true;
 
-
-
-    #region Components
-    public Animator anim { get; private set; }
-    public Rigidbody2D rb { get; private set; }
-    #endregion Components
+    public SkillManager skillManager { get; private set; }
 
     #region States
     public PlayerStateMachine stateMachine { get; private set; }
@@ -49,44 +36,48 @@ public class Player : MonoBehaviour
     public PlayerDashState dashState { get; private set; }
     public PlayerWallJumpState wallJumpState { get; private set; }
 
+    public PlayerCounterAttackState counterState { get; private set; }
     public PlayerPrimaryAttackState primaryAttack { get; private set; }
+    public PlayerDeadState deadState { get; private set; }
     #endregion States
 
     #region Unity API
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         stateMachine = new PlayerStateMachine();
 
         idleState = new PlayerIdleState(stateMachine, this, "Idle");
         moveState = new PlayerMoveState(stateMachine, this, "Move");
         jumpState = new PlayerJumpState(stateMachine, this, "Jump");
         airState = new PlayerAirState(stateMachine, this, "Jump");
-        dashState = new PlayerDashState(stateMachine, this, "Dash");
+        dashState = new PlayerDashState(stateMachine, this, "Dash", SpriteRenderer);
         wallSlideState = new PlayerWallSlideState(stateMachine, this, "WallSlide");
         wallJumpState = new PlayerWallJumpState(stateMachine, this, "Jump");
 
         primaryAttack = new PlayerPrimaryAttackState(stateMachine, this, "Attack");
+        counterState = new PlayerCounterAttackState(stateMachine, this, "CounterAttack");
+        deadState = new PlayerDeadState(stateMachine, this, "Dead");
     }
 
-    private void Start()
+    protected override void Start()
     {
-        anim = GetComponentInChildren<Animator>();
-        rb = GetComponent<Rigidbody2D>();
+        base.Start();
+
+        skillManager = SkillManager.instance;
 
         stateMachine.Initialize(idleState);
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         stateMachine.currentState.Update();
         CheckInputForDash();
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(groundCheck.position, new Vector2(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
-        Gizmos.DrawLine(wallCheck.position, new Vector2(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
-    }
     #endregion Unity API
 
     private void CheckInputForDash()
@@ -94,12 +85,8 @@ public class Player : MonoBehaviour
         if (IsWallDetected())
             return;
 
-        dashUsageTimer -= Time.deltaTime;
-
-        if (Input.GetKeyDown(KeyCode.LeftShift) & dashUsageTimer < 0)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && SkillManager.instance.dash.CanUseSkill())
         {
-            dashUsageTimer = dashCooldown;
-
             dashDir = Input.GetAxisRaw("Horizontal");
 
             if (dashDir == 0)
@@ -108,7 +95,10 @@ public class Player : MonoBehaviour
             stateMachine.ChangeState(dashState);
         }
     }
+
     #region Public API
+
+    public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 
     public IEnumerator BusyFor(float _seconds)
     {
@@ -119,34 +109,11 @@ public class Player : MonoBehaviour
         isBusy = false;
     }
 
-    public bool IsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
-    public bool IsWallDetected() => Physics2D.Raycast(wallCheck.position, Vector2.right * facingDir, wallCheckDistance, groundLayer);
-
-    public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
-    #region Velocity
-    public void SetVelocity(float xVelocity, float yVelocity)
+    public override void Die()
     {
-        rb.velocity = new Vector2(xVelocity, yVelocity);
-        FlipController(xVelocity);
-    }
+        base.Die();
 
-    public void ZeroVelocity() => rb.velocity = Vector2.zero;
-    #endregion
-    #region SpriteFlip
-    public void Flip()
-    {
-        facingDir = facingDir * -1;
-        facingRight = !facingRight;
-        transform.Rotate(0, 180, 0);
+        stateMachine.ChangeState(deadState);
     }
-
-    public void FlipController(float x)
-    {
-        if (x > 0 && !facingRight)
-            Flip();
-        else if (x < 0 && facingRight)
-            Flip();
-    }
-    #endregion
     #endregion
 }
