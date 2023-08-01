@@ -23,6 +23,10 @@ public class PlayerPrimaryAttackState : PlayerState
         if (comboCounter > 2 || Time.time >= lastTimeAttacked + comboWindow)
             comboCounter = 0;
 
+
+
+        AudioManager.instance.PlaySFX(comboCounter);
+
         player.anim.SetInteger("ComboCounter", comboCounter);
 
         float attackDir = player.facingDir;

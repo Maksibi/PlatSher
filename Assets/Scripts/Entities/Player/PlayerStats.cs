@@ -17,6 +17,8 @@ public class PlayerStats : CharacterStats
     {
         base.TakeDamage(_damage);
 
+        AudioManager.instance.PlaySFX(Random.Range(31, 34));
+
         player.DamageEffect();
     }
 

@@ -1,20 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class UI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private GameObject characterUI;
+    [SerializeField] private GameObject skillTreeUI;
+    [SerializeField] private GameObject craftUI;
+    [SerializeField] private GameObject optionsUI;
+
+    private void Start()
     {
-        
+        SwitchTo(null); 
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.C))
+            SwitchWithKeyTo(characterUI);
         
+        if(Input.GetKeyDown(KeyCode.Escape))
+            SwitchWithKeyTo(optionsUI);
     }
 
     public void SwitchTo(GameObject _menu)
@@ -26,5 +30,15 @@ public class UI : MonoBehaviour
 
         if(_menu != null)
             _menu.SetActive(true);
+    }
+
+    public void SwitchWithKeyTo(GameObject _menu)
+    {
+        if (_menu != null && _menu.activeSelf) 
+        {
+            _menu.SetActive(false);
+            return;
+        }
+        SwitchTo(_menu);
     }
 }

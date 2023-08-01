@@ -238,8 +238,7 @@ public class CharacterStats : MonoBehaviour
 
         totalDamage = CheckTargetArmor(_targetStats, totalDamage);
 
-        //if (totalDamage > 0)
-           // _targetStats.TakeDamage(totalDamage);
+        _targetStats.TakeDamage(totalDamage);
         DoMagicDamage(_targetStats);
     }
 

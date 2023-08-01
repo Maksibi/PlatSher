@@ -11,6 +11,8 @@ public class EnemySkeletonAnimationTriggers : MonoBehaviour
 
     private void AttackTrigger()
     {
+        AudioManager.instance.PlaySFX(0);
+
         Player player;
 
         Collider2D[] colliders = Physics2D.OverlapCircleAll(enemy.attackCheck.position, enemy.attackCheckRadius);
