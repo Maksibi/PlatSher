@@ -70,11 +70,3 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-Assets/Scripts/Entities/Player/Maybe/MovementStateController.cs
-Assets/Scripts/Entities/Player/Maybe/MovementStateController.cs.meta
-Assets/Scripts/Entities/Player/Maybe/PlayerState.cs.meta
-Assets/Scripts/Entities/Player/Maybe/PlayerStateMachine.cs.meta
-Assets/Scripts/Entities/Player/Maybe/States.meta
-Assets/Scripts/Entities/Player/Maybe/States/Climbing.cs.meta
-Assets/Scripts/Entities/Player/Maybe/States/Idle.cs.meta
-Assets/Scripts/Entities/Player/Maybe/States/Jumping.cs.meta
